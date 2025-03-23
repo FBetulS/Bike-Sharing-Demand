@@ -3,10 +3,10 @@
 Bu proje, bisiklet paylaşım sistemlerinde kullanıcı talebini tahmin etmek için makine öğrenimi tekniklerini kullanmaktadır. Amaç, kullanıcıların bisikletleri hangi zaman dilimlerinde daha fazla talep ettiğini belirlemektir.
 
 ## 🔗 Kaggle Veri Seti
-[Bike Sharing Demand]
+[Bike Sharing Demand](https://www.kaggle.com/c/bike-sharing-demand)
 
 ## 🔗 Hugging Face Uygulaması
-[Bisiklet - Hugging Face Space]
+[Bisiklet - Hugging Face Space](https://huggingface.co/spaces/btulftma/bike)
 
 ## 📊 Proje Aşamaları
 1. **Veri Yükleme**:
