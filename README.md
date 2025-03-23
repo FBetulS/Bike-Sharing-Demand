@@ -5,6 +5,9 @@ Bu proje, bisiklet paylaşım sistemlerinde kullanıcı talebini tahmin etmek i�
 ## 🔗 Kaggle Veri Seti
 [Bike Sharing Demand]
 
+## 🔗 Hugging Face Uygulaması
+[Bisiklet - Hugging Face Space]
+
 ## 📊 Proje Aşamaları
 1. **Veri Yükleme**:
    - Eğitim (`train.csv`) ve test (`test.csv`) veri setleri yüklenir.
