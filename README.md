@@ -2,6 +2,9 @@
 
 Bu proje, bisiklet paylaşım sistemlerinde kullanıcı talebini tahmin etmek için makine öğrenimi tekniklerini kullanmaktadır. Amaç, kullanıcıların bisikletleri hangi zaman dilimlerinde daha fazla talep ettiğini belirlemektir.
 
+⚠️ Not
+3D grafiklerim ve görselleştirmelerim maalesef gözükmüyor. Bu durum, bazı tarayıcı veya platform uyumsuzluklarından kaynaklanabilir.
+
 ## 🔗 Kaggle Veri Seti
 [Bike Sharing Demand](https://www.kaggle.com/c/bike-sharing-demand)
 
