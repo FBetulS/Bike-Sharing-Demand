@@ -9,7 +9,7 @@ Bu proje, bisiklet paylaşım sistemlerinde kullanıcı talebini tahmin etmek i�
 [Bike Sharing Demand](https://www.kaggle.com/c/bike-sharing-demand)
 
 ## 🔗 Hugging Face Uygulaması
-[Bisiklet - Hugging Face Space](https://huggingface.co/spaces/btulftma/bike)
+[Bisiklet - Hugging Face Space](https://huggingface.co/spaces/btulftma/bikepredict)
 
 ## 📊 Proje Aşamaları
 1. **Veri Yükleme**:
