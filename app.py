@@ -83,8 +83,11 @@ def preprocess_data(df):
     df['weather_light_rain_snow'] = (df['weather'] == 3).astype(int)
     df['weather_heavy_rain_snow'] = (df['weather'] == 4).astype(int)
     
-    # Time of day
-    df['time_of_day'] = pd.cut(df['hour'], bins=[0, 6, 12, 18, 24], labels=['night', 'morning', 'afternoon', 'evening'])
+    # Create numeric time of day instead of categorical
+    df['night_hours'] = ((df['hour'] >= 0) & (df['hour'] < 6)).astype(int)
+    df['morning_hours'] = ((df['hour'] >= 6) & (df['hour'] < 12)).astype(int)
+    df['afternoon_hours'] = ((df['hour'] >= 12) & (df['hour'] < 18)).astype(int)
+    df['evening_hours'] = ((df['hour'] >= 18) & (df['hour'] < 24)).astype(int)
     
     # Temperature ratio
     df['temp_ratio'] = df['temp'] / df['atemp']
@@ -124,8 +127,9 @@ if page == "Home":
     3. Check the **About** page for more information about this project
     """)
     
+    # Fixed deprecated parameter
     st.image("https://images.unsplash.com/photo-1556316384-12c35d30afa4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80", 
-             caption="Bike Sharing System", use_column_width=True)
+             caption="Bike Sharing System", use_container_width=True)
 
 
 # Prediction page
@@ -221,18 +225,29 @@ elif page == "Prediction":
             st.write(f"Weather: {weather[1]}")
             st.write(f"Temperature: {temp:.2f} (normalized)")
             
-            # Remove target columns
-            for col in ['casual', 'registered', 'count', 'count_log']:
+            # Remove target columns and non-numeric columns
+            for col in ['datetime', 'casual', 'registered', 'count', 'count_log', 'season_hour', 'time_of_day']:
                 if col in input_processed.columns:
                     input_processed = input_processed.drop(col, axis=1)
             
-            # Remove datetime column for prediction
-            prediction_df = input_processed.drop('datetime', axis=1)
+            # Create dummy variables for categorical features
+            categorical_cols = ['season', 'holiday', 'workingday', 'weather', 'year', 'month', 'day', 'hour', 'weekday']
+            prediction_df = pd.get_dummies(input_processed, columns=[col for col in categorical_cols if col in input_processed.columns])
             
             # Check if model is LightGBM or sklearn based
             if hasattr(model, 'predict'):
-                # For sklearn models
-                prediction = model.predict(prediction_df)
+                # For sklearn models, we need to handle the feature set carefully
+                try:
+                    prediction = model.predict(prediction_df)
+                except Exception as e:
+                    st.warning(f"Feature mismatch error: {e}")
+                    st.info("Trying with simplified feature set...")
+                    
+                    # Simplify to just the core features that the example model expects
+                    hour = input_processed['hour'].values[0]
+                    weather_val = input_processed['weather'].values[0]
+                    prediction = model.predict([[hour, weather_val]])
+                
                 if len(prediction) > 0:
                     # Check if log transform was used
                     if np.max(prediction) < 10:  # Assuming logged values will be small
@@ -260,7 +275,7 @@ elif page == "Prediction":
         
         except Exception as e:
             st.error(f"Error making prediction: {str(e)}")
-            st.info("This could be due to a mismatch between the model's expected features and the features provided. Make sure your model is compatible with the input data.")
+            st.info("This could be due to a mismatch between the model's expected features and the features provided. Try uploading your trained model file for better results.")
 
 # About page
 elif page == "About":
@@ -280,9 +295,17 @@ elif page == "About":
     - Random Forest Regressor
     - Gradient Boosting Regressor
     - LightGBM
+    - XGBoost
     
     ### Model Performance
     The LightGBM model achieved the best performance with an RMSLE score of 0.38706 on the Kaggle leaderboard.
+    
+    ### Preprocessing Steps
+    - Feature engineering from datetime
+    - Log transformation of target variable
+    - Outlier removal (values over 1000)
+    - Feature interactions (temp × humidity)
+    - One-hot encoding of categorical variables
     
     ### How to Deploy This App
     To deploy this app on Hugging Face Spaces:
@@ -294,13 +317,14 @@ elif page == "About":
     5. Push changes to your repository
     
     ### Dependencies
-    - streamlit
-    - pandas
-    - numpy
-    - matplotlib
-    - seaborn
-    - scikit-learn
-    - lightgbm
+    - streamlit==1.26.0
+    - pandas==2.0.3
+    - numpy==1.24.4
+    - matplotlib==3.7.2
+    - seaborn==0.12.2
+    - scikit-learn==1.3.0
+    - lightgbm==3.3.5
+    - xgboost==1.7.6
     
     ### Credits
     Built with ❤️ using Streamlit
